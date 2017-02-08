@@ -9,12 +9,8 @@ class sqliteDB():
         self.__conn = None
         self.__cursor = None
 
-        try:
-            self.__conn = sqlite3.connect('micro_url.db', isolation_level=None)
-            self.__conn.row_factory = dict_factory
-        except Exception as e:
-            print('could not connect to DB')
-            raise e
+        self.__conn = sqlite3.connect('micro_url.db', isolation_level=None)
+        self.__conn.row_factory = dict_factory
 
     def get_cursor(self):
         return self.__conn.cursor()
