@@ -8,8 +8,10 @@ This API service is written to run under Python 3.
 *Running the service*
 ----------------------------------
 The service will be available on http://localhost:8000
->$ cd micro_url/micro_url/
->$ python3 api.py
+```
+cd micro_url/micro_url/
+python3 api.py
+```
 
 *Querying the API*
 ----------------------------------
