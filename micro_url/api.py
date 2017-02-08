@@ -5,11 +5,14 @@ A simple JSON REST API for URL shortening.
 
 """
 import json
+from datetime import datetime
+
 import short_url
 import user_agents
-from datetime import datetime
+
 from bottle import (default_app, get, post, run, request,
                     response, hook, redirect, HTTPError)
+
 from sqlitedb import cursor
 
 
@@ -46,12 +49,10 @@ def index(slug=None):
         return res
 
     with cursor() as dbc:
-        dbc.execute("""SELECT cfg from main.urls where slug='%s'""" % slug)
+        dbc.execute("""SELECT cfg from main.urls where slug=?""", (slug,))
         res = dbc.fetchone()
         if res:
             cfg = json.loads(res.get('cfg'))
-            print(res)
-
             ua = user_agents.parse(request.get_header('User-Agent'))
             mobile_url = cfg.get('mobile').get('url')
             tablet_url = cfg.get('tablet').get('url')
@@ -127,8 +128,7 @@ def url():
             dbc.execute("UPDATE main.urls set slug=? where id=?", (slug, _id))
     except Exception as e:
         print(repr(e))
-        raise HTTPError(
-            400, 'Bad Request - This route expects a POST of raw JSON')
+        raise HTTPError(400, 'Bad Request - This route expects a POST of raw JSON')
 
     return {'shortened_url': get_url(request.get_header('host'), slug)}
 
@@ -138,6 +138,11 @@ def get_url(host, slug):
 
 
 def elapsed_time(timestamp):
+    """
+    Return a string describing the amount of time that has passed
+    since the supplied timestamp
+    
+    """
     return str(datetime.now() - datetime.fromtimestamp(timestamp))
 
 
