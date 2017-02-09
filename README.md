@@ -4,7 +4,7 @@ This API service is written to run under Python 3.
 ----------------------------------
 ```
 cd micro_url/
-python3 setup.py
+python3 setup.py install
 ```
 
 *Running the service*

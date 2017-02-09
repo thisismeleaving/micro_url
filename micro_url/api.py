@@ -59,17 +59,14 @@ def index(slug=None):
             desktop_url = cfg.get('desktop').get('url')
 
             if ua.is_mobile and mobile_url:
-                print('is mobile')
                 url = mobile_url
                 cfg['mobile']['hits'] += 1
 
             elif ua.is_tablet and tablet_url:
-                print('is tablet')
                 url = tablet_url
                 cfg['tablet']['hits'] += 1
 
             else:
-                print('is desktop')
                 url = desktop_url
                 cfg['desktop']['hits'] += 1
 
@@ -77,9 +74,6 @@ def index(slug=None):
             if not 'http' in url:
                 url = 'http://{}'.format(url)
 
-            print('berty is here')
-            print(url)
-            print(cfg)
             with cursor() as dbc:
                 dbc.execute(
                     """UPDATE main.urls set cfg=? where slug=?""", (json.dumps(cfg), slug))
@@ -127,7 +121,6 @@ def url():
             slug = short_url.encode_url(_id)
             dbc.execute("UPDATE main.urls set slug=? where id=?", (slug, _id))
     except Exception as e:
-        print(repr(e))
         raise HTTPError(400, 'Bad Request - This route expects a POST of raw JSON')
 
     return {'shortened_url': get_url(request.get_header('host'), slug)}

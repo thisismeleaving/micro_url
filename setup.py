@@ -17,6 +17,7 @@ setup(
     packages=["micro_url"],
     install_requires=[
         "bottle",
+        "boddle", #unit testing tool for bottle
         "short_url",
         "user_agents"
     ]
