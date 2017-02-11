@@ -49,7 +49,7 @@ def index(slug=None):
         return res
 
     with cursor() as dbc:
-        dbc.execute("""SELECT cfg from main.urls where slug=?""", (slug,))
+        dbc.execute("""SELECT cfg FROM main.urls WHERE slug=?""", (slug,))
         res = dbc.fetchone()
         if res:
             cfg = json.loads(res.get('cfg'))
@@ -76,7 +76,7 @@ def index(slug=None):
 
             with cursor() as dbc:
                 dbc.execute(
-                    """UPDATE main.urls set cfg=? where slug=?""", (json.dumps(cfg), slug))
+                    """UPDATE main.urls SET cfg=? WHERE slug=?""", (json.dumps(cfg), slug))
 
             redirect(url)
         else:
@@ -96,6 +96,7 @@ def url():
     """
     data = request.json
     created = datetime.now().timestamp()
+    
     try:
         targets = {
             'mobile': {
@@ -113,13 +114,12 @@ def url():
         }
 
         with cursor() as dbc:
-            res = dbc.execute(
-                "INSERT INTO main.urls(cfg, created) values(?,?)",
+            res = dbc.execute("INSERT INTO main.urls(cfg, created) VALUES(?,?)",
                 (json.dumps(targets),
                  created))
             _id = res.lastrowid
             slug = short_url.encode_url(_id)
-            dbc.execute("UPDATE main.urls set slug=? where id=?", (slug, _id))
+            dbc.execute("UPDATE main.urls SET slug=? WHERE id=?", (slug, _id))
     except Exception as e:
         raise HTTPError(400, 'Bad Request - This route expects a POST of raw JSON')
 
